@@ -9,6 +9,7 @@ from .managers import CustomUserManager
 
 class ContactData(models.Model):
     phone = models.TextField("Номер телефона", blank=True)
+    city = models.TextField("Город", blank=True)
     address = models.TextField("Адрес", blank=True)
 
 
