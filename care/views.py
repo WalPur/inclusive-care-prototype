@@ -1,15 +1,29 @@
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
-from rest_framework.mixins import ListModelMixin
+from rest_framework.mixins import (
+    CreateModelMixin,
+    ListModelMixin,
+    RetrieveModelMixin,
+    UpdateModelMixin,
+)
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from care.models import CenterRating, ReabilatationCenter
-from care.serializers import RatingSerializer, ReabilitationListSerializer
+from care.serializers import (
+    RatingSerializer,
+    ReabilitationListSerializer,
+    ReabilitationRetrieveSerializer,
+)
 
 
-class CenterViewSet(ListModelMixin, GenericViewSet):
-    serializer_class = ReabilitationListSerializer
+class CenterViewSet(
+    ListModelMixin,
+    RetrieveModelMixin,
+    CreateModelMixin,
+    UpdateModelMixin,
+    GenericViewSet,
+):
     queryset = ReabilatationCenter.objects.all()
 
     @action(methods=["post"], detail=True, serializer_class=RatingSerializer)
@@ -26,3 +40,8 @@ class CenterViewSet(ListModelMixin, GenericViewSet):
         else:
             CenterRating.objects.create(**data)
             return Response(serializer.data)
+
+    def get_serializer_class(self):
+        if self.action != "list":
+            return ReabilitationRetrieveSerializer
+        return ReabilitationListSerializer
