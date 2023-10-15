@@ -24,4 +24,5 @@ class CenterRating(models.Model):
         ReabilatationCenter, models.SET_NULL, null=True, related_name="ratings"
     )
     rating = models.IntegerField("Оценка")
+    text = models.TextField("Отзыв", blank=True)
     date = models.DateTimeField("Дата оценки", auto_now_add=True)

@@ -13,6 +13,7 @@ swagger_urls = [
 
 api_urls = [
     path("api/v1/users/", include("users.urls")),
+    path("api/v1/care/", include("care.urls")),
 ]
 
 
