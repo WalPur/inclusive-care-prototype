@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from care.models import CenterRating, ReabilatationCenter
+from care.models import Article, CenterRating, ReabilatationCenter, Tag
 from users.models import ContactData
 from users.serializers import ContactDataSerializer
 
@@ -60,4 +60,18 @@ class ReabilitationListSerializer(serializers.ModelSerializer):
 class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = CenterRating
-        fields = ["rating", "text"]
+        fields = ["id", "rating", "text"]
+
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = "__all__"
+
+
+class ArticleSerializer(serializers.ModelSerializer):
+    tags_list = TagSerializer(read_only=True)
+
+    class Meta:
+        model = Article
+        fields = "__all__"

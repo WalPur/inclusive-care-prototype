@@ -2,6 +2,7 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.mixins import (
     CreateModelMixin,
+    DestroyModelMixin,
     ListModelMixin,
     RetrieveModelMixin,
     UpdateModelMixin,
@@ -9,19 +10,22 @@ from rest_framework.mixins import (
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from care.models import CenterRating, ReabilatationCenter
+from care.models import Article, CenterRating, ReabilatationCenter, Tag
 from care.serializers import (
+    ArticleSerializer,
     RatingSerializer,
     ReabilitationListSerializer,
     ReabilitationRetrieveSerializer,
+    TagSerializer,
 )
 
 
 class CenterViewSet(
     ListModelMixin,
-    RetrieveModelMixin,
     CreateModelMixin,
+    RetrieveModelMixin,
     UpdateModelMixin,
+    DestroyModelMixin,
     GenericViewSet,
 ):
     queryset = ReabilatationCenter.objects.all()
@@ -47,3 +51,25 @@ class CenterViewSet(
         if self.action != "list":
             return ReabilitationRetrieveSerializer
         return ReabilitationListSerializer
+
+
+class ArticleViewSet(
+    ListModelMixin,
+    CreateModelMixin,
+    RetrieveModelMixin,
+    UpdateModelMixin,
+    DestroyModelMixin,
+    GenericViewSet,
+):
+    queryset = Article.objects.all()
+    serializer_class = ArticleSerializer
+
+
+class TagViewSet(
+    ListModelMixin,
+    CreateModelMixin,
+    DestroyModelMixin,
+    GenericViewSet,
+):
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer

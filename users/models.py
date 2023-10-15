@@ -12,6 +12,13 @@ class ContactData(models.Model):
     city = models.TextField("Город", blank=True)
     address = models.TextField("Адрес", blank=True)
 
+    def __str__(self) -> str:
+        return "{} {} {}".format(self.phone, self.city, self.address)
+
+    class Meta:
+        verbose_name = "Контактные данные"
+        verbose_name_plural = "Контактные данные"
+
 
 class CustomUser(AbstractUser):
     username = None
@@ -32,5 +39,9 @@ class CustomUser(AbstractUser):
 
     objects = CustomUserManager()
 
-    def __str__(self):
-        return self.email
+    def __str__(self) -> str:
+        return "{} {} {}".format(self.last_name, self.first_name, self.middle_name)
+
+    class Meta:
+        verbose_name = "Пользователь"
+        verbose_name_plural = "Пользователи"
