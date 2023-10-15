@@ -42,6 +42,8 @@ class CenterViewSet(
             return Response(serializer.data)
 
     def get_serializer_class(self):
+        if self.action == "rate":
+            return RatingSerializer
         if self.action != "list":
             return ReabilitationRetrieveSerializer
         return ReabilitationListSerializer

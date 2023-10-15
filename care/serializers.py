@@ -51,7 +51,10 @@ class ReabilitationListSerializer(serializers.ModelSerializer):
         score = 0
         for rating in all_ratings:
             score += rating.rating
-        return round(score / all_ratings.count(), 1)
+        try:
+            return round(score / all_ratings.count(), 1)
+        except ZeroDivisionError:
+            return 0
 
 
 class RatingSerializer(serializers.ModelSerializer):
