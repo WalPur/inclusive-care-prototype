@@ -10,9 +10,18 @@ from rest_framework.mixins import (
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from care.models import Article, CenterRating, ReabilatationCenter, Tag
+from care.models import (
+    Article,
+    CenterRating,
+    Event,
+    EventRegistration,
+    ReabilatationCenter,
+    Tag,
+)
 from care.serializers import (
     ArticleSerializer,
+    EventRegistrationSerializer,
+    EventSerializer,
     RatingSerializer,
     ReabilitationListSerializer,
     ReabilitationRetrieveSerializer,
@@ -73,3 +82,29 @@ class TagViewSet(
 ):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+
+
+class EventViewSet(
+    ListModelMixin,
+    CreateModelMixin,
+    RetrieveModelMixin,
+    UpdateModelMixin,
+    DestroyModelMixin,
+    GenericViewSet,
+):
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
+
+    @action(methods=["post"], detail=True, serializer_class=EventRegistrationSerializer)
+    def register(self, request, *args, **kwargs):
+        if EventRegistration.objects.filter(
+            user=request.user, event=self.get_object()
+        ).exists():
+            raise ValidationError("Вы уже зарегистрированы на событие")
+        else:
+            serializer = EventRegistrationSerializer(
+                EventRegistration.objects.create(
+                    user=request.user, event=self.get_object()
+                )
+            )
+            return Response(serializer.data)

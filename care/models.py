@@ -66,3 +66,33 @@ class Article(models.Model):
     class Meta:
         verbose_name = "Статья"
         verbose_name_plural = "Статьи"
+
+
+class Event(models.Model):
+    name = models.TextField("Название")
+    start_date = models.DateTimeField("Дата начала")
+    place = models.TextField("Место проведения")
+    contact_data = models.ForeignKey(
+        ContactData, models.SET_NULL, related_name="events", null=True
+    )
+
+    def __str__(self) -> str:
+        return self.name
+
+    class Meta:
+        verbose_name = "Событие"
+        verbose_name_plural = "События"
+
+
+class EventRegistration(models.Model):
+    user = models.ForeignKey(
+        CustomUser, models.SET_NULL, null=True, related_name="events"
+    )
+    event = models.ForeignKey(Event, models.SET_NULL, null=True, related_name="users")
+
+    def __str__(self) -> str:
+        return "Регистрация пользователя {} на событие {}".format(self.user, self.event)
+
+    class Meta:
+        verbose_name = "Регистрация на событие"
+        verbose_name_plural = "Регистрации на событие"

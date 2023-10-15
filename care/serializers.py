@@ -1,6 +1,13 @@
 from rest_framework import serializers
 
-from care.models import Article, CenterRating, ReabilatationCenter, Tag
+from care.models import (
+    Article,
+    CenterRating,
+    Event,
+    EventRegistration,
+    ReabilatationCenter,
+    Tag,
+)
 from users.models import ContactData
 from users.serializers import ContactDataSerializer
 
@@ -75,3 +82,16 @@ class ArticleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Article
         fields = "__all__"
+
+
+class EventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = "__all__"
+
+
+class EventRegistrationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EventRegistration
+        fields = "__all__"
+        read_only_fields = ["user", "event"]
