@@ -6,6 +6,7 @@ from care.models import (
     Event,
     EventRegistration,
     ReabilatationCenter,
+    SocialHelp,
     Tag,
 )
 from users.models import ContactData
@@ -116,3 +117,27 @@ class EventRegistrationSerializer(serializers.ModelSerializer):
         model = EventRegistration
         fields = ["id", "event", "user"]
         read_only_fields = ["user", "event"]
+
+
+class SocialHelpSerializer(serializers.ModelSerializer):
+    contact_data = ContactDataSerializer()
+
+    class Meta:
+        model = SocialHelp
+        fields = "__all__"
+
+    def create(self, validated_data):
+        contact_data = validated_data.pop("contact_data")
+        contact = ContactData.objects.create(**contact_data)
+        event = Event.objects.create(contact_data=contact, **validated_data)
+        return event
+
+    def update(self, instance, validated_data):
+        contact_data = validated_data.pop("contact_data")
+        contact_serializer = ContactDataSerializer(
+            instance.contact_data, contact_data, partial=True
+        )
+        contact_serializer.is_valid(raise_exception=True)
+        contact_serializer.update(instance.contact_data, contact_data)
+        super(EventSerializer, self).update(instance, validated_data)
+        return instance

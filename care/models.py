@@ -96,3 +96,20 @@ class EventRegistration(models.Model):
     class Meta:
         verbose_name = "Регистрация на событие"
         verbose_name_plural = "Регистрации на событие"
+
+
+class SocialHelp(models.Model):
+    name = models.TextField("Название")
+    description = models.TextField("Описание")
+    criteria = models.TextField("Критерии и оценки")
+    support = models.TextField("Выгоды и поддержка")
+    contact_data = models.ForeignKey(
+        ContactData, models.SET_NULL, related_name="social_helps", null=True
+    )
+
+    def __str__(self) -> str:
+        return self.name
+
+    class Meta:
+        verbose_name = "Социальная помощь"
+        verbose_name_plural = "Социальная помощь"
